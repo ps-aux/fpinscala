@@ -73,17 +73,30 @@ object MyModule {
     isSortedUpTo(1)
   }
 
-  def main(args: Array[String]): Unit = {
-    println(formatAbs(-42))
-    println(formatFactorial(7))
-    println(formatResult("factorial", 5, factorial))
-    println(formatResult("abs", -45, abs))
+  def partial1[A, B, C](a: A, f: (A, B) => C): B => C =
+    (b: B) => f(a, b)
 
-    val a = Array(4, 8, 7, 3)
-    val b = Array(1, 2, 3, 4)
-    def isLessOrEqual(x: Int, y: Int) = x <= y
-    println(isSorted(a, isLessOrEqual))
-    println(isSorted(b, isLessOrEqual))
+  /**
+    * Exercise 2.3
+    *
+    * @param f
+    * @tparam A
+    * @tparam B
+    * @tparam C
+    * @return
+    */
+  def curry[A, B, C](f: (A, B) => C): A => (B => C) =
+    a => (b => f(a, b))
+
+  def main(args: Array[String]): Unit = {
+    def foo(a: Int, b: Int): Int = a + b
+
+    def foo11 = partial1(11, foo)
+    println(foo11(2)) // Should be 13
+
+    def fooCurried = curry(foo)
+
+    println(fooCurried(11)(2)) // Should be 13
   }
 
 }
