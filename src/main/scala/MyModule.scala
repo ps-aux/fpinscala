@@ -46,11 +46,44 @@ object MyModule {
     go(n, 0, 1)
   }
 
+  def findFirst[A](array: Array[A], p: A => Boolean): Int = {
+    @annotation.tailrec
+    def loop(n: Int): Int =
+      if (n > array.length) -1
+      else if (p(array(n))) n
+      else loop(n + 1)
+
+    loop(0)
+  }
+
+  /**
+    * Excercise 2.2
+    *
+    * @param array
+    * @param ordered predicate determining if element a <= b
+    * @return
+    */
+  def isSorted[A](array: Array[A], ordered: (A, A) => Boolean): Boolean = {
+    def isSortedUpTo(n: Int): Boolean = {
+      if (n == array.length) true
+      else if (!ordered(array(n - 1), array(n))) false
+      else isSortedUpTo(n + 1)
+    }
+
+    isSortedUpTo(1)
+  }
+
   def main(args: Array[String]): Unit = {
     println(formatAbs(-42))
     println(formatFactorial(7))
     println(formatResult("factorial", 5, factorial))
     println(formatResult("abs", -45, abs))
+
+    val a = Array(4, 8, 7, 3)
+    val b = Array(1, 2, 3, 4)
+    def isLessOrEqual(x: Int, y: Int) = x <= y
+    println(isSorted(a, isLessOrEqual))
+    println(isSorted(b, isLessOrEqual))
   }
 
 }
